@@ -1,4 +1,48 @@
 (* Placeholder for the dating-client. Note that in order to communicate 
    with your server you will need to create the corresponding trustmap *)
    
-0
+import stdio
+import declassifyutil
+
+
+let fun loop () =
+    let
+        val _ = print "Waiting for match response..."
+        val newResponse = receive [hn ("NEWMATCH", response) => response]
+        val _ = printWithLabels ("Match response received:", newResponse)
+    in
+        loop ()
+    end
+
+(* 客户端函数，发送新的配置文件请求并进入接收循环 *)
+fun client serverId =
+    let
+        val lev = `{client2}`  (* 设定安全级别 *)
+        val name = "client2" raisedTo lev
+        val year = 1992 raisedTo lev
+        val gender = false raisedTo lev
+        val interests = ["reading", "traveling"] raisedTo lev
+
+
+        fun agent (other_lev, other_name, other_year, other_gender, other_interests) =
+            let val _ = debugpc()
+            in
+                if other_gender then (declassify(true, authority, other_lev), declassifydeep(profile, authority, other_lev))
+                else (declassify(false, authority, other_lev), declassify(profile, authority, other_lev))
+            end
+
+        (* 配置文件元组 *)
+        val profile = (lev, name, year, gender, interests)
+        val pid = self()  (* 获取当前进程ID *)
+
+        val _ = send (serverId, ("NEWPROFILE", (profile, agent, pid)))
+        val _ = print "Profile and agent sent to the server."
+    in
+        loop ()
+    end
+
+(* 查找服务器ID并启动客户端 *)
+val serverId = whereis ("@id-server", "datingServer")
+in
+    spawn (fn () => client serverId)
+end
