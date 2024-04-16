@@ -38,7 +38,7 @@ fun client serverId =
         loop ()
     end
 
-(* 查找服务器ID并启动客户端 *)
+
 val serverId = whereis ("@id-server", "datingServer")
 in
     spawn (fn () => client serverId)
