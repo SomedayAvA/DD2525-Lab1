@@ -11,16 +11,16 @@ let fun loop () =
         loop ()
     end
 
-(* 客户端函数，发送新的配置文件请求并进入接收循环 *)
+
 fun client serverId =
     let
-        val lev = `{client1}`  (* 设定安全级别 *)
+        val lev = `{client1}`
         val name = "client1" raisedTo lev
         val year = 1992 raisedTo lev
-        val gender = true raisedTo lev  (* 假设为女性 *)
+        val gender = true raisedTo lev
         val interests = ["reading", "traveling"] raisedTo lev
 
-
+        val profile = (lev, name, year, gender, interests)
         fun agent (other_lev, other_name, other_year, other_gender, other_interests) =
             let val _ = debugpc()
             in
@@ -28,9 +28,9 @@ fun client serverId =
                 else (declassify(true, authority, other_lev), declassifydeep(profile, authority, other_lev))
             end
 
-        (* 配置文件元组 *)
-        val profile = (lev, name, year, gender, interests)
-        val pid = self()  (* 获取当前进程ID *)
+
+
+        val pid = self()
 
         val _ = send (serverId, ("NEWPROFILE", (profile, agent, pid)))
         val _ = print "Profile and agent sent to the server."
