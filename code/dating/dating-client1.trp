@@ -7,18 +7,19 @@ let fun loop () =
         val _ = print "Waiting for match response..."
         val newResponse = receive [hn ("NEWMATCH", response) => response]
         val _ = printWithLabels ("Match response received:", newResponse)
+
     in
         loop ()
     end
 
 
-fun client serverId =
+fun client (serverId, lev, name, year, gender, interests) =
     let
-        val lev = `{client1}`
-        val name = "client1" raisedTo lev
-        val year = 1992 raisedTo lev
-        val gender = true raisedTo lev
-        val interests = ["reading", "traveling"] raisedTo lev
+        val lev = lev
+        val name = name raisedTo lev
+        val year = year raisedTo lev
+        val gender = gender raisedTo lev
+        val interests = interests raisedTo lev
 
         val profile = (lev, name, year, gender, interests)
         fun agent (other_lev, other_name, other_year, other_gender, other_interests) =
@@ -38,8 +39,7 @@ fun client serverId =
         loop ()
     end
 
-
 val serverId = whereis ("@id-server", "datingServer")
 in
-    spawn (fn () => client serverId)
+    spawn (fn () => client (serverId,`{client1}`,"client1", 1992, true, ["swimming", "cooking"]))
 end
