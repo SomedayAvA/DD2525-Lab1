@@ -15,13 +15,13 @@ let fun loop () =
     end
 
 
-fun client serverId =
+fun client (serverId, lev, name, year, gender, interests) =
     let
-        val lev = `{client2}`
-        val name = "client2" raisedTo lev
-        val year = 1992 raisedTo lev
-        val gender = false raisedTo lev
-        val interests = ["reading", "traveling"] raisedTo lev
+        val lev = lev
+        val name = name raisedTo lev
+        val year = year raisedTo lev
+        val gender = gender raisedTo lev
+        val interests = interests raisedTo lev
 
         val profile = (lev, name, year, gender, interests)
         fun agent (other_lev, other_name, other_year, other_gender, other_interests) =
@@ -32,7 +32,6 @@ fun client serverId =
             end
 
 
-
         val pid = self()
 
         val _ = send (serverId, ("NEWPROFILE", (profile, agent, pid)))
@@ -41,8 +40,7 @@ fun client serverId =
         loop ()
     end
 
-
 val serverId = whereis ("@id-server", "datingServer")
 in
-    spawn (fn () => client serverId)
+    spawn (fn () => client (serverId,`{client2}`,"client2", 1992, false, ["swimming", "running"]))
 end
