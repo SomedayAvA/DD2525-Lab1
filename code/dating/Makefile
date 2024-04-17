@@ -9,3 +9,6 @@ dating-client1:
 dating-client2:
 	$(TROUPE)/bin/troupec dating-client2.trp -o ./out/dating-client2.js
 	node $(TROUPE)/rt/built/troupe.js -f=./out/dating-client2.js --id=../ids/id-client2.json --trustmap=../trustmaps/dating-client2.json --aliases=aliases.json
+dating-client3:
+	$(TROUPE)/bin/troupec dating-client3.trp -o ./out/dating-client3.js
+	node $(TROUPE)/rt/built/troupe.js -f=./out/dating-client3.js --id=../ids/id-client3.json --trustmap=../trustmaps/dating-client3.json --aliases=aliases.json
