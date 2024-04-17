@@ -1,4 +1,59 @@
-(* Placeholder for the dating-client. Note that in order to communicate 
-   with your server you will need to create the corresponding trustmap *)
-   
-0
+import stdio
+import declassifyutil
+
+
+let fun loop () =
+    let
+        val _ = print "Waiting for match response..."
+        val newResponse = receive [hn ("NEWMATCH", response) => response]
+        val _ = printWithLabels ("Match response received:", newResponse)
+        val (lev, name, year,gender, interests) = declassifydeep(newResponse, authority, `{}`)
+                val name = name raisedTo `{client3}`
+                val year = year raisedTo `{client3}`
+                val gender = gender raisedTo `{client3}`
+                val interests = interests raisedTo `{client3}`
+        val profile = (`{client3}`, name, year,gender, interests)
+        fun agent (other_lev, other_name, other_year, other_gender, other_interests) =
+                    let val _ = debugpc()
+                    in
+                       (declassify(true, authority, other_lev), declassifydeep(profile, authority, other_lev))
+                    end
+        val pid = self()
+        val serverId = whereis ("@id-server", "datingServer")
+        val _ = printWithLabels ("Send:", profile)
+        val _ = send (serverId, ("NEWPROFILE", (profile, agent, pid)))
+        val _ = print "Profile and agent sent to the server."
+
+    in
+        loop ()
+    end
+
+
+fun client (serverId, lev, name, year, gender, interests) =
+    let
+        val lev = lev
+        val name = name raisedTo lev
+        val year = year raisedTo lev
+        val gender = gender raisedTo lev
+        val interests = interests raisedTo lev
+
+        val profile = (lev, name, year, gender, interests)
+        fun agent (other_lev, other_name, other_year, other_gender, other_interests) =
+            let val _ = debugpc()
+            in
+                (declassify(true, authority, other_lev), declassifydeep(profile, authority, other_lev))
+            end
+
+
+
+        val pid = self()
+        val _ = send (serverId, ("NEWPROFILE", (profile, agent, pid)))
+        val _ = print "Profile and agent sent to the server."
+    in
+        loop ()
+    end
+
+val serverId = whereis ("@id-server", "datingServer")
+in
+    spawn (fn () => client (serverId,`{client3}`,"client3", 1992, true, ["reading", "traveling"]))
+end
