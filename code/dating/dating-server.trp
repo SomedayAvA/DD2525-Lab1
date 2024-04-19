@@ -31,8 +31,10 @@ let fun server db =
 
     fun Sendnewmatch (match, dbmatch, pid, dbpid) =
       let
-        val (bool1, _) = declassifydeep (match, authority, `{}`)
-        val (bool2, _) = declassifydeep (dbmatch, authority, `{}`)
+        val (bool1, _) = match
+        val bool1 = declassifydeep (bool1, authority, `{}`)
+        val (bool2, _) = dbmatch
+        val bool2 = declassifydeep (bool2, authority, `{}`)
       in
         if bool1 andalso bool2 then
           let
