@@ -33,6 +33,9 @@ let fun server db =
       let
         val (bool1, _) = match
         val bool1 = declassifydeep (bool1, authority, `{}`)
+        (* Current blocking level does not flow to the target level of the declassification
+           | target level of the declassification: {}
+           | current blocking level: {cersei} *)
         val (bool2, _) = dbmatch
         val bool2 = declassifydeep (bool2, authority, `{}`)
       in
@@ -41,6 +44,7 @@ let fun server db =
             val _ = printString "Match found\n"
             val profile1 =
               let pini authority
+
                 val (_, profile) = match
               in
                 profile
@@ -48,6 +52,11 @@ let fun server db =
 
             val profile2 =
               let pini authority
+            (*
+            >> Illegal trust flow when sending information to a remote node
+             | the trust level of the recepient node: {daenerys}
+             | the level of the information to send:  {daenerys,eddard}
+            *)
                 val (_, profile) = dbmatch
               in
                 profile
